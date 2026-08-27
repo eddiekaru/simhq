@@ -1,4 +1,5 @@
 /* One coherent database-backed workflow; replaces the prior screen overrides. */
+(() => { const script=document.createElement('script'); script.src='/reference-layout.js'; document.head.append(script); })();
 const baseRender = render;
 const statuses = ['available','in_use','blocked','lost','damaged','suspended','disposed','returned','pending_activation'];
 const title = x => String(x || '—').replaceAll('_',' ').replace(/\b\w/g,c=>c.toUpperCase());
