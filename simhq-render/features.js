@@ -1,6 +1,17 @@
 /* Restored management screens backed by the SIMHQ API. */
 const originalRender = render;
-render = function () { originalRender(); const side=document.querySelector('.side'); if (!side) return; [['teams','♧ Teams'],['users','⚿ Users'],['reports','⇩ Reports']].forEach(([id,label])=>{let n=document.createElement('div');n.className='nav '+(page===id?'active':'');n.textContent=label;n.onclick=()=>go(id);side.append(n)}); if({teams,users,reports}[page]) ({teams,users,reports}[page])(); };
+render = function () {
+  const extra = { teams, users, reports };
+  if (extra[page]) {
+    root.innerHTML = `<div class="shell"><aside class="side"><div class="brand">▣ SIMHQ</div>${[['dashboard','⌂ Dashboard'],['sims','▤ SIM Cards'],['agents','♙ Agents'],['usage','◷ Weekly Usage'],['audit','◉ Audit Log'],['teams','♧ Teams'],['users','⚿ Users'],['reports','⇩ Reports']].map(([id,label])=>`<div class="nav ${page===id?'active':''}" onclick="go('${id}')">${label}</div>`).join('')}</aside><main class="main"><header class="top"><b>${page[0].toUpperCase()+page.slice(1)}</b><span>${e(me.name)} · <button class="secondary" onclick="logout()">Sign out</button></span></header><div class="content" id="app"></div></main></div>`;
+    extra[page]();
+    return;
+  }
+  originalRender();
+  const side=document.querySelector('.side');
+  if (!side) return;
+  [['teams','♧ Teams'],['users','⚿ Users'],['reports','⇩ Reports']].forEach(([id,label])=>{let n=document.createElement('div');n.className='nav';n.textContent=label;n.onclick=()=>go(id);side.append(n)});
+};
 function teams(){app.innerHTML=`<div class="head"><div><h1>Teams</h1><p>Create operational teams and assign agents to them.</p></div>${write()?'<button class="primary" onclick="newTeam()">+ Add team</button>':''}</div><div class="card tablewrap"><table><thead><tr><th>TEAM</th><th>ACTIVE AGENTS</th><th>ACTIVE SIMS</th></tr></thead><tbody>${state.teams.map(t=>`<tr><td><b>${e(t.name)}</b></td><td>${state.agents.filter(a=>a.team===t.name&&a.status==='active').length}</td><td>${state.sims.filter(s=>s.team===t.name&&s.status==='in_use').length}</td></tr>`).join('')||'<tr><td colspan="3">No teams yet.</td></tr>'}</tbody></table></div>`}
 function newTeam(){open(`<div class="dhead"><h2>Add team</h2><button onclick="close()">×</button></div><form class="form" onsubmit="saveTeam(event)"><div class="wide"><label>TEAM NAME</label><input name="name" required></div><div class="wide actions"><button type="button" class="secondary" onclick="close()">Cancel</button><button class="primary">Save team</button></div></form>`)}
 async function saveTeam(ev){ev.preventDefault();try{await api('/api/teams',{method:'POST',body:JSON.stringify(Object.fromEntries(new FormData(ev.target)))});close();await load();go('teams')}catch(x){alert(x.message)}}
