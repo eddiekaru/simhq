@@ -6,7 +6,10 @@ const jwt = require('jsonwebtoken');
 
 if (!process.env.DATABASE_URL) throw new Error('DATABASE_URL is required');
 if (!process.env.JWT_SECRET) throw new Error('JWT_SECRET is required');
-const pool = new Pool({ connectionString: process.env.DATABASE_URL });
+const pool = new Pool({
+  connectionString: process.env.DATABASE_URL,
+  ssl: { rejectUnauthorized: false }
+});
 const app = express();
 app.use(express.json());
 app.use(express.static(__dirname));
