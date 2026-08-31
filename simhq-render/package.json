@@ -2,11 +2,12 @@
   "name": "simhq",
   "version": "1.0.0",
   "private": true,
-  "scripts": { "start": "node server.js" },
+  "scripts": { "start": "node server-mysql.js", "start:postgres": "node server.js" },
   "dependencies": {
     "bcryptjs": "^2.4.3",
     "express": "^4.21.2",
     "jsonwebtoken": "^9.0.2",
+    "mysql2": "^3.11.5",
     "pg": "^8.13.1"
   }
 }
