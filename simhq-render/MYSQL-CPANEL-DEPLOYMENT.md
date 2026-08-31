@@ -16,3 +16,5 @@
 5. Restart the Node.js application. Remove `ADMIN_PASSWORD` after the first successful administrator login.
 
 The MySQL schema starts a fresh database. Existing Render PostgreSQL data must be exported and transformed before it can be imported; do not shut down the Render site until that data migration is verified.
+
+To migrate existing records, run `migrate-postgres-to-mysql.js` once from a machine that can reach both databases. It needs `SOURCE_DATABASE_URL` (the Render Postgres external URL) plus the same `DB_*` MySQL variables. Never paste either database password into chat.
